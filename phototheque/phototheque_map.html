@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte Leaflet avec GeoJSON dynamiques</title>
+    <title>Photothèque</title>
     <!-- Feuille de style pour Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -49,6 +49,7 @@
     <script>
         // Initialisation de la carte
         const map = L.map('map').setView([46.603354, 1.888334], 6);
+
         // Ajout d'une couche de tuiles OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -64,6 +65,11 @@
             else return '#990000'; // rouge-foncé
         }
 
+        // Fonction pour zoomer sur l'emprise d'un polygone
+        function zoomToFeature(layer) {
+            map.fitBounds(layer.getBounds());
+        }
+
         // Fonction pour créer le contenu de la popup avec des badges
         function createPopupContent(feature, layer) {
             // Fonction pour créer des badges à partir d'une liste séparée par des virgules
@@ -71,12 +77,15 @@
                 return list.split(',').map(item => `<span class="badge bg-primary">${item.trim()}</span>`).join(' ');
             }
 
+            // Ajout d'un identifiant unique pour la couche
+            const layerId = L.stamp(layer);
+
             return `
                 <div>
                     <p><strong>Année(s) :</strong> <span class="badge bg-info">${feature.properties.nb_annees}</span> ${createBadges(feature.properties.annees_liste)}</p>
                     <p><strong>Jour(s) :</strong> <span class="badge bg-info">${feature.properties.nb_jours}</span> ${createBadges(feature.properties.jours_liste)}</p>
                     <p><strong>Photo(s) :</strong> <span class="badge bg-info">${feature.properties.nb_photos}</span></p>
-                    <button class="zoom-button" onclick="map.fitBounds(${JSON.stringify(layer.getBounds())})">Zoom</button>
+                    <button class="zoom-button" onclick="zoomToFeature(window.layer${layerId})">Zoom</button>
                 </div>
             `;
         }
@@ -96,6 +105,8 @@
                             };
                         },
                         onEachFeature: function(feature, layer) {
+                            const layerId = L.stamp(layer);
+                            window[`layer${layerId}`] = layer;
                             layer.on('click', function() {
                                 const popupContent = createPopupContent(feature, layer);
                                 layer.bindPopup(popupContent).openPopup();
@@ -105,7 +116,7 @@
                 });
         }
 
-        // Chemins vers vos fichiers GeoJSON (à adapter selon votre configuration)
+        // Chemins vers les GeoJSON
         const geoJsonFiles = [
             { url: 'hexgrid_500000m.geojson', minZoom: 0, maxZoom: 4 },
             { url: 'hexgrid_050000m.geojson', minZoom: 5, maxZoom: 7 },
@@ -146,4 +157,3 @@
     </script>
 </body>
 </html>
-
