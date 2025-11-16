@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photothèque</title>
+    <!-- Feuille de style pour Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <!-- Bootstrap CSS pour les badges -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .badge {
+            margin-right: 3px;
+            margin-bottom: 3px;
+        }
+		a.badge {
+			text-decoration: none !important;
+		}
+        .zoom-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #74ac00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .zoom-button:hover {
+            background-color: #ffc107;
+        }
+        .url-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #74ac00;
+            color: white !important;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .url-button:hover {
+            background-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <!-- Bibliothèque Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script>
+        // Initialisation de la carte
+        const map = L.map('map').setView([46.603354, 1.888334], 6);
+        // Ajout d'une couche de tuiles OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.inaturalist.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Fonction pour déterminer la couleur en fonction de nb_photos
+        function getColor(nb_photos) {
+            if (nb_photos < 10) return '#FFFF00'; // jaune
+            else if (nb_photos < 100) return '#FFCC00'; // jaune-orange
+            else if (nb_photos < 500) return '#FF9900'; // orange
+            else if (nb_photos < 1000) return '#FF6600'; // orange-rouge
+            else if (nb_photos < 5000) return '#FF0000'; // rouge
+            else return '#990000'; // rouge-foncé
+        }
+
+        // Fonction pour zoomer sur l'emprise d'un polygone
+        function zoomToFeature(layer) {
+            map.fitBounds(layer.getBounds());
+        }
+
+        // Fonction pour créer le contenu de la popup avec des badges
+        function createPopupContent(feature, layer) {
+            // Fonction pour créer des badges à partir d'une liste séparée par des virgules
+			function createBadges(list) {
+				const moisEnTexte = {
+					'01': 'janvier', '02': 'février', '03': 'mars', '04': 'avril',
+					'05': 'mai', '06': 'juin', '07': 'juillet', '08': 'août',
+					'09': 'septembre', '10': 'octobre', '11': 'novembre', '12': 'décembre'
+				};
+
+				return list.split(',').map(item => {
+					let trimmedItem = item.trim();
+					let displayText = trimmedItem;
+					let urlText = trimmedItem;
+
+					// Vérifie si l'item est une date ou un mois
+					if (trimmedItem.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
+						// Format DD/MM/YYYY
+						const [jour, mois, annee] = trimmedItem.split('/');
+						displayText = `${jour} ${moisEnTexte[mois]} ${annee}`;
+						urlText = `${jour} ${moisEnTexte[mois]} ${annee}`;
+					} else if (trimmedItem.match(/^\d{1,2}\/\d{4}$/)) {
+						// Format MM/YYYY
+						const [mois, annee] = trimmedItem.split('/');
+						displayText = `${moisEnTexte[mois]} ${annee}`;
+						urlText = `${moisEnTexte[mois]} ${annee}`;
+					}
+
+					const encodedItem = encodeURIComponent(urlText);
+					return `<a href="https://photos.google.com/search/${encodedItem}" target="_blank" class="badge bg-info text-dark">${displayText}</a>`;
+				}).join(' ');
+			}
+
+
+            // Récupération des coordonnées de l'emprise
+            const bounds = layer.getBounds();
+            const sw = bounds.getSouthWest();
+            const ne = bounds.getNorthEast();
+
+            // Construction de l'URL
+            const url = `https://www.inaturalist.org/observations?nelat=${ne.lat}&nelng=${ne.lng}&subview=map&swlat=${sw.lat}&swlng=${sw.lng}&user_id=sylvainm_53`;
+
+            return `
+                <div>
+                    <h2><span class="badge bg-warning text-dark">${feature.properties.nb_photos}</span><strong> photo(s)</strong></h2>
+                    <h5><span class="badge bg-warning text-dark">${feature.properties.nb_jours}</span><strong> jour(s) :</strong><br>${createBadges(feature.properties.jours_liste)}</h5>
+                    <h5><span class="badge bg-warning text-dark">${feature.properties.nb_annees}</span><strong> année(s) :</strong><br>${createBadges(feature.properties.annees_liste)}</h5>
+                    <button class="zoom-button" onclick="zoomToFeature(window.layer${L.stamp(layer)})">Zoom</button>
+                    <a href="${url}" target="_blank" class="url-button">Mes Obs. iNaturalist</a>
+                </div>
+            `;
+        }
+
+        // Fonction pour charger un GeoJSON et l'ajouter à la carte
+        function loadGeoJson(url, minZoom, maxZoom) {
+            return fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    return L.geoJSON(data, {
+                        style: function(feature) {
+                            return {
+                                color: 'DimGray',
+                                weight: 1.5,
+								opacity: 1,
+                                fillColor: getColor(feature.properties.nb_photos),
+                                fillOpacity: 0.5
+                            };
+                        },
+                        onEachFeature: function(feature, layer) {
+                            const layerId = L.stamp(layer);
+                            window[`layer${layerId}`] = layer;
+                            layer.on('click', function() {
+                                const popupContent = createPopupContent(feature, layer);
+                                layer.bindPopup(popupContent).openPopup();
+                            });
+                        }
+                    });
+                });
+        }
+
+        // Chemins vers les GeoJSON
+        const geoJsonFiles = [
+            { url: 'hexgrid_500000m.geojson', minZoom: 0, maxZoom: 4 },
+            { url: 'hexgrid_050000m.geojson', minZoom: 5, maxZoom: 7 },
+            { url: 'hexgrid_005000m.geojson', minZoom: 8, maxZoom: 12 },
+            { url: 'hexgrid_000500m.geojson', minZoom: 13, maxZoom: 20 }
+        ];
+
+        // Tableau pour stocker les couches GeoJSON
+        const geoJsonLayers = [];
+
+        // Chargement initial des GeoJSON
+        geoJsonFiles.forEach(file => {
+            loadGeoJson(file.url, file.minZoom, file.maxZoom)
+                .then(layer => {
+                    geoJsonLayers.push({ layer: layer, minZoom: file.minZoom, maxZoom: file.maxZoom });
+                    // Ajout initial à la carte si le zoom actuel correspond
+                    if (map.getZoom() >= file.minZoom && map.getZoom() <= file.maxZoom) {
+                        layer.addTo(map);
+                    }
+                });
+        });
+
+        // Gestion de l'événement de changement de zoom
+        map.on('zoomend', function() {
+            const currentZoom = map.getZoom();
+            geoJsonLayers.forEach(geoJson => {
+                if (currentZoom >= geoJson.minZoom && currentZoom <= geoJson.maxZoom) {
+                    if (!map.hasLayer(geoJson.layer)) {
+                        geoJson.layer.addTo(map);
+                    }
+                } else {
+                    if (map.hasLayer(geoJson.layer)) {
+                        map.removeLayer(geoJson.layer);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
