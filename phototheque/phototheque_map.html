@@ -26,10 +26,13 @@
             margin-right: 3px;
             margin-bottom: 3px;
         }
+		a.badge {
+			text-decoration: none !important;
+		}
         .zoom-button {
             margin-top: 10px;
             padding: 5px 10px;
-            background-color: #007bff;
+            background-color: #74ac00;
             color: white;
             border: none;
             border-radius: 4px;
@@ -37,6 +40,20 @@
         }
         .zoom-button:hover {
             background-color: #0056b3;
+        }
+        .url-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #74ac00;
+            color: white !important;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .url-button:hover {
+            background-color: #86a91c;
         }
     </style>
 </head>
@@ -49,10 +66,9 @@
     <script>
         // Initialisation de la carte
         const map = L.map('map').setView([46.603354, 1.888334], 6);
-
         // Ajout d'une couche de tuiles OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; <a href="https://www.inaturalist.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
         // Fonction pour déterminer la couleur en fonction de nb_photos
@@ -73,19 +89,52 @@
         // Fonction pour créer le contenu de la popup avec des badges
         function createPopupContent(feature, layer) {
             // Fonction pour créer des badges à partir d'une liste séparée par des virgules
-            function createBadges(list) {
-                return list.split(',').map(item => `<span class="badge bg-primary">${item.trim()}</span>`).join(' ');
-            }
+			function createBadges(list) {
+				const moisEnTexte = {
+					'01': 'janvier', '02': 'février', '03': 'mars', '04': 'avril',
+					'05': 'mai', '06': 'juin', '07': 'juillet', '08': 'août',
+					'09': 'septembre', '10': 'octobre', '11': 'novembre', '12': 'décembre'
+				};
 
-            // Ajout d'un identifiant unique pour la couche
-            const layerId = L.stamp(layer);
+				return list.split(',').map(item => {
+					let trimmedItem = item.trim();
+					let displayText = trimmedItem;
+					let urlText = trimmedItem;
+
+					// Vérifie si l'item est une date ou un mois
+					if (trimmedItem.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
+						// Format DD/MM/YYYY
+						const [jour, mois, annee] = trimmedItem.split('/');
+						displayText = `${jour} ${moisEnTexte[mois]} ${annee}`;
+						urlText = `${jour} ${moisEnTexte[mois]} ${annee}`;
+					} else if (trimmedItem.match(/^\d{1,2}\/\d{4}$/)) {
+						// Format MM/YYYY
+						const [mois, annee] = trimmedItem.split('/');
+						displayText = `${moisEnTexte[mois]} ${annee}`;
+						urlText = `${moisEnTexte[mois]} ${annee}`;
+					}
+
+					const encodedItem = encodeURIComponent(urlText);
+					return `<a href="https://photos.google.com/search/${encodedItem}" target="_blank" class="badge bg-light text-dark">${displayText}</a>`;
+				}).join(' ');
+			}
+
+
+            // Récupération des coordonnées de l'emprise
+            const bounds = layer.getBounds();
+            const sw = bounds.getSouthWest();
+            const ne = bounds.getNorthEast();
+
+            // Construction de l'URL
+            const url = `https://www.inaturalist.org/observations?nelat=${ne.lat}&nelng=${ne.lng}&subview=map&swlat=${sw.lat}&swlng=${sw.lng}&user_id=sylvainm_53`;
 
             return `
                 <div>
-                    <p><strong>Année(s) :</strong> <span class="badge bg-info">${feature.properties.nb_annees}</span> ${createBadges(feature.properties.annees_liste)}</p>
-                    <p><strong>Jour(s) :</strong> <span class="badge bg-info">${feature.properties.nb_jours}</span> ${createBadges(feature.properties.jours_liste)}</p>
-                    <p><strong>Photo(s) :</strong> <span class="badge bg-info">${feature.properties.nb_photos}</span></p>
-                    <button class="zoom-button" onclick="zoomToFeature(window.layer${layerId})">Zoom</button>
+                    <h2><span class="badge bg-warning text-dark">${feature.properties.nb_photos}</span><strong> photo(s)</strong></h2>
+                    <h5><span class="badge bg-warning text-dark">${feature.properties.nb_jours}</span><strong> jour(s) :</strong><br>${createBadges(feature.properties.jours_liste)}</h5>
+                    <h5><span class="badge bg-warning text-dark">${feature.properties.nb_annees}</span><strong> année(s) :</strong><br>${createBadges(feature.properties.annees_liste)}</h5>
+                    <button class="zoom-button" onclick="zoomToFeature(window.layer${L.stamp(layer)})">Zoom</button>
+                    <a href="${url}" target="_blank" class="url-button">Mes Obs. iNaturalist</a>
                 </div>
             `;
         }
@@ -98,8 +147,9 @@
                     return L.geoJSON(data, {
                         style: function(feature) {
                             return {
-                                color: getColor(feature.properties.nb_photos),
-                                weight: 1,
+                                color: 'DimGray',
+                                weight: 1.5,
+								opacity: 1,
                                 fillColor: getColor(feature.properties.nb_photos),
                                 fillOpacity: 0.5
                             };
