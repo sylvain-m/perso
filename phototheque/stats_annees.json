@@ -1,0 +1,224 @@
+[
+    {
+        "annee": 1900,
+        "nb": 5021,
+        "diskspace_gb": 4.4,
+        "diskspace_pretty": "4468 MB"
+    },
+    {
+        "annee": 1940,
+        "nb": 1,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "1474 kB"
+    },
+    {
+        "annee": 1963,
+        "nb": 1,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "129 kB"
+    },
+    {
+        "annee": 1966,
+        "nb": 1,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "49 kB"
+    },
+    {
+        "annee": 1969,
+        "nb": 1,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "103 kB"
+    },
+    {
+        "annee": 1980,
+        "nb": 4,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "4345 kB"
+    },
+    {
+        "annee": 1981,
+        "nb": 2,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "2016 kB"
+    },
+    {
+        "annee": 1984,
+        "nb": 3,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "4789 kB"
+    },
+    {
+        "annee": 1991,
+        "nb": 2,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "455 kB"
+    },
+    {
+        "annee": 1992,
+        "nb": 2,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "437 kB"
+    },
+    {
+        "annee": 1993,
+        "nb": 4,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "1663 kB"
+    },
+    {
+        "annee": 1994,
+        "nb": 1,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "2373 kB"
+    },
+    {
+        "annee": 2000,
+        "nb": 4,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "426 kB"
+    },
+    {
+        "annee": 2002,
+        "nb": 1,
+        "diskspace_gb": 0.0,
+        "diskspace_pretty": "358 kB"
+    },
+    {
+        "annee": 2003,
+        "nb": 627,
+        "diskspace_gb": 0.2,
+        "diskspace_pretty": "249 MB"
+    },
+    {
+        "annee": 2004,
+        "nb": 595,
+        "diskspace_gb": 0.4,
+        "diskspace_pretty": "433 MB"
+    },
+    {
+        "annee": 2005,
+        "nb": 1634,
+        "diskspace_gb": 2.2,
+        "diskspace_pretty": "2237 MB"
+    },
+    {
+        "annee": 2006,
+        "nb": 3575,
+        "diskspace_gb": 8.8,
+        "diskspace_pretty": "9036 MB"
+    },
+    {
+        "annee": 2007,
+        "nb": 7806,
+        "diskspace_gb": 18.1,
+        "diskspace_pretty": "18 GB"
+    },
+    {
+        "annee": 2008,
+        "nb": 5791,
+        "diskspace_gb": 13.3,
+        "diskspace_pretty": "13 GB"
+    },
+    {
+        "annee": 2009,
+        "nb": 2943,
+        "diskspace_gb": 6.8,
+        "diskspace_pretty": "6915 MB"
+    },
+    {
+        "annee": 2010,
+        "nb": 4216,
+        "diskspace_gb": 9.8,
+        "diskspace_pretty": "10060 MB"
+    },
+    {
+        "annee": 2011,
+        "nb": 5818,
+        "diskspace_gb": 14.7,
+        "diskspace_pretty": "15 GB"
+    },
+    {
+        "annee": 2012,
+        "nb": 4763,
+        "diskspace_gb": 11.7,
+        "diskspace_pretty": "12 GB"
+    },
+    {
+        "annee": 2013,
+        "nb": 7844,
+        "diskspace_gb": 18.0,
+        "diskspace_pretty": "18 GB"
+    },
+    {
+        "annee": 2014,
+        "nb": 6351,
+        "diskspace_gb": 16.8,
+        "diskspace_pretty": "17 GB"
+    },
+    {
+        "annee": 2015,
+        "nb": 11489,
+        "diskspace_gb": 131.9,
+        "diskspace_pretty": "132 GB"
+    },
+    {
+        "annee": 2016,
+        "nb": 12649,
+        "diskspace_gb": 131.3,
+        "diskspace_pretty": "131 GB"
+    },
+    {
+        "annee": 2017,
+        "nb": 8004,
+        "diskspace_gb": 81.4,
+        "diskspace_pretty": "81 GB"
+    },
+    {
+        "annee": 2018,
+        "nb": 11205,
+        "diskspace_gb": 82.9,
+        "diskspace_pretty": "83 GB"
+    },
+    {
+        "annee": 2019,
+        "nb": 13887,
+        "diskspace_gb": 96.5,
+        "diskspace_pretty": "97 GB"
+    },
+    {
+        "annee": 2020,
+        "nb": 12036,
+        "diskspace_gb": 94.6,
+        "diskspace_pretty": "95 GB"
+    },
+    {
+        "annee": 2021,
+        "nb": 6450,
+        "diskspace_gb": 35.9,
+        "diskspace_pretty": "36 GB"
+    },
+    {
+        "annee": 2022,
+        "nb": 5030,
+        "diskspace_gb": 22.5,
+        "diskspace_pretty": "22 GB"
+    },
+    {
+        "annee": 2023,
+        "nb": 10864,
+        "diskspace_gb": 55.4,
+        "diskspace_pretty": "55 GB"
+    },
+    {
+        "annee": 2024,
+        "nb": 13176,
+        "diskspace_gb": 95.5,
+        "diskspace_pretty": "95 GB"
+    },
+    {
+        "annee": 2025,
+        "nb": 11828,
+        "diskspace_gb": 93.0,
+        "diskspace_pretty": "93 GB"
+    }
+]
