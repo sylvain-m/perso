@@ -6,6 +6,29 @@
 
 }
 
+.banniere {
+    padding: 10px;
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    width: 0;
+    height: 0;
+	z-index: 1000;
+}
+
+.construction-text {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+	color: #e74c3c;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    background-color: rgba(255, 255, 255, 0.5); /* Fond blanc transparent */
+    padding: 5px; /* Espace autour du texte */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8); /* Surlignage blanc transparent */
+    white-space: nowrap;
+}
+
+
 .carousel-item img{
 	width: 100%;
 	height: 93vh;
