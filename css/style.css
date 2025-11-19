@@ -92,7 +92,7 @@ footer p{
 @media (min-width: 1400px) { ... }
 
 .navbar {
-	background-color: rgba(188, 218, 59, 0.7) !important;
+	background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
 .nav-item {
