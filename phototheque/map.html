@@ -145,8 +145,13 @@
 					let displayText = trimmedItem;
 					let urlText = trimmedItem;
 
+					// Gestion des dates inconnues
+					if (trimmedItem === '1900-01-01' || trimmedItem === '1900-01' || trimmedItem === '1900') {
+						displayText = 'date inconnue';
+						urlText = 'date inconnue';
+					}
 					// Vérifie si l'item est une date complète (AAAA-MM-JJ)
-					if (trimmedItem.match(/^\d{4}-\d{2}-\d{2}$/)) {
+					else if (trimmedItem.match(/^\d{4}-\d{2}-\d{2}$/)) {
 						const [annee, mois, jour] = trimmedItem.split('-');
 						displayText = `${jour} ${moisEnTexte[mois]} ${annee}`;
 						urlText = `${jour} ${moisEnTexte[mois]} ${annee}`;
