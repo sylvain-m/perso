@@ -144,18 +144,21 @@
 					let trimmedItem = item.trim();
 					let displayText = trimmedItem;
 					let urlText = trimmedItem;
-					// Vérifie si l'item est une date ou un mois
-					if (trimmedItem.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
-						// Format DD/MM/YYYY
-						const [jour, mois, annee] = trimmedItem.split('/');
+
+					// Vérifie si l'item est une date complète (AAAA-MM-JJ)
+					if (trimmedItem.match(/^\d{4}-\d{2}-\d{2}$/)) {
+						const [annee, mois, jour] = trimmedItem.split('-');
 						displayText = `${jour} ${moisEnTexte[mois]} ${annee}`;
 						urlText = `${jour} ${moisEnTexte[mois]} ${annee}`;
-					} else if (trimmedItem.match(/^\d{1,2}\/\d{4}$/)) {
-						// Format MM/YYYY
-						const [mois, annee] = trimmedItem.split('/');
+					}
+					// Vérifie si l'item est un mois/année (AAAA-MM)
+					else if (trimmedItem.match(/^\d{4}-\d{2}$/)) {
+						const [annee, mois] = trimmedItem.split('-');
 						displayText = `${moisEnTexte[mois]} ${annee}`;
 						urlText = `${moisEnTexte[mois]} ${annee}`;
 					}
+					// Sinon, laisse l'année telle quelle (AAAA)
+
 					const encodedItem = encodeURIComponent(urlText);
 					return `<a href="https://photos.google.com/search/${encodedItem}" target="_blank" class="badge bg-info text-dark">${displayText}</a>`;
 				}).join(' ');
